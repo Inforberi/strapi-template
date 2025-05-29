@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_forms",
+  "info": {
+    "displayName": "Форма",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Inputs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "items.input",
+      "required": true
+    }
+  }
+}

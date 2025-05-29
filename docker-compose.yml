@@ -1,0 +1,35 @@
+version: '3.9'
+
+volumes:
+  db_data:
+  uploads:
+  pnpm_store:
+  strapi_node_modules:
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: strapi-db
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USERNAME}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  strapi:
+    container_name: strapi
+    env_file: .env
+    ports:
+      - '1337:1337'
+    depends_on:
+      db:
+        condition: service_healthy

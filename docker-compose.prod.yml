@@ -1,0 +1,10 @@
+services:
+    strapi:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.prod
+        environment:
+            NODE_ENV: production
+        command: ['pnpm', 'start']
+        volumes:
+            - uploads:/app/public/uploads

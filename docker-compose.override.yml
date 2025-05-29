@@ -1,0 +1,13 @@
+services:
+    strapi:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.dev
+        environment:
+            NODE_ENV: development
+        command: ['pnpm', 'develop']
+        volumes:
+            - ./:/app:delegated
+            - /app/node_modules # блокируем затирание node_modules
+            - uploads:/app/public/uploads
+            - pnpm_store:/home/node/.pnpm-store

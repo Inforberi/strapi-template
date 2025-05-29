@@ -1,0 +1,28 @@
+FROM node:22-alpine AS build
+
+RUN apk add --no-cache git build-base vips-dev && corepack enable
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml ./
+RUN --mount=type=cache,target=/home/node/.pnpm-store \
+    pnpm install --frozen-lockfile
+
+COPY . .
+RUN pnpm build
+
+FROM node:22-alpine AS runtime
+
+RUN apk add --no-cache vips-dev && corepack enable
+
+WORKDIR /app
+
+COPY --from=build /app ./
+RUN pnpm prune --prod
+
+RUN addgroup -S strapi && adduser -S strapi -G strapi
+USER strapi
+
+ENV NODE_ENV=production
+EXPOSE 1337
+CMD ["pnpm", "start"]
